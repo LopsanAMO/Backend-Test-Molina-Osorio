@@ -1,0 +1,630 @@
+openapi: 3.0.3
+info:
+  title: Your Project API
+  version: 1.0.0
+  description: Your project description
+paths:
+  /api-token-auth/:
+    post:
+      operationId: api_token_auth_create
+      description: ''
+      tags:
+      - api-token-auth
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/AuthToken'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/AuthToken'
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthToken'
+        required: true
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthToken'
+          description: ''
+  /api/schema/:
+    get:
+      operationId: api_schema_retrieve
+      description: |-
+        OpenApi3 schema for this API. Format can be selected via content negotiation.
+
+        - YAML: application/vnd.oai.openapi
+        - JSON: application/vnd.oai.openapi+json
+      parameters:
+      - in: query
+        name: format
+        schema:
+          type: string
+          enum:
+          - json
+          - yaml
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/vnd.oai.openapi:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/yaml:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/vnd.oai.openapi+json:
+              schema:
+                type: object
+                additionalProperties: {}
+            application/json:
+              schema:
+                type: object
+                additionalProperties: {}
+          description: ''
+  /api/v1/dishes/:
+    get:
+      operationId: Dish.List
+      description: Lista de Platillos.
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedDishList'
+          description: ''
+    post:
+      operationId: Dish.Create
+      description: Crear Platillos.
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Dish'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Dish'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Dish'
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dish'
+          description: ''
+  /api/v1/dishes/{id}/:
+    put:
+      operationId: Dish.Update
+      description: Actializar Platillos.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this dish.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Dish'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Dish'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Dish'
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dish'
+          description: ''
+    patch:
+      operationId: api_v1_dishes_partial_update
+      description: ''
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this dish.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedDish'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedDish'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedDish'
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dish'
+          description: ''
+    delete:
+      operationId: Dish.Delete
+      description: Eliminar Platillos.
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this dish.
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+  /api/v1/menu/:
+    post:
+      operationId: Menu.Create
+      description: Crear Menus
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MenuCreateUpdate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MenuCreateUpdate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MenuCreateUpdate'
+        required: true
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MenuCreateUpdate'
+          description: ''
+  /api/v1/menu/{id}/:
+    put:
+      operationId: Menu.Update
+      description: Actializar Menus
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this menu.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MenuCreateUpdate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/MenuCreateUpdate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/MenuCreateUpdate'
+        required: true
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MenuCreateUpdate'
+          description: ''
+    patch:
+      operationId: api_v1_menu_partial_update
+      description: ''
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this menu.
+        required: true
+      tags:
+      - api
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedMenuCreateUpdate'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedMenuCreateUpdate'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedMenuCreateUpdate'
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MenuCreateUpdate'
+          description: ''
+    delete:
+      operationId: Menu.Delete
+      description: Eliminar Menus
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: integer
+        description: A unique integer value identifying this menu.
+        required: true
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      - {}
+      responses:
+        '204':
+          description: No response body
+  /api/v1/menus/:
+    get:
+      operationId: Menus.List
+      description: Lista de Menus.
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedMenuListList'
+          description: ''
+  /api/v1/orders/:
+    get:
+      operationId: Orders.List
+      description: Lista de Ordenes.
+      parameters:
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      tags:
+      - api
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      - {}
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedOrderList'
+          description: ''
+  /get_orders/:
+    post:
+      operationId: get_orders_create
+      description: Leer pedidos de slack
+      tags:
+      - get_orders
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Fake'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Fake'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Fake'
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Fake'
+          description: ''
+  /send_menu_reminder/:
+    post:
+      operationId: send_menu_reminder_create
+      description: Mandar notificacion de menu a slack
+      tags:
+      - send_menu_reminder
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Fake'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/Fake'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/Fake'
+      security:
+      - cookieAuth: []
+      - tokenAuth: []
+      - {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Fake'
+          description: ''
+components:
+  schemas:
+    AuthToken:
+      type: object
+      properties:
+        username:
+          type: string
+          writeOnly: true
+        password:
+          type: string
+          writeOnly: true
+        token:
+          type: string
+          readOnly: true
+      required:
+      - password
+      - token
+      - username
+    Dish:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+          maxLength: 100
+        description:
+          type: string
+          nullable: true
+        id:
+          type: integer
+          readOnly: true
+      required:
+      - id
+    Employee:
+      type: object
+      properties:
+        name:
+          type: string
+          maxLength: 40
+      required:
+      - name
+    Fake:
+      type: object
+      properties:
+        fake_field:
+          type: string
+    MenuCreateUpdate:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+        options:
+          type: array
+          items:
+            $ref: '#/components/schemas/Dish'
+      required:
+      - date
+    MenuList:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+        options:
+          type: array
+          items:
+            $ref: '#/components/schemas/Nested'
+          readOnly: true
+      required:
+      - date
+      - options
+    Nested:
+      type: object
+      properties:
+        id:
+          type: integer
+          readOnly: true
+        name:
+          type: string
+          nullable: true
+          maxLength: 100
+        description:
+          type: string
+          nullable: true
+      required:
+      - id
+    Order:
+      type: object
+      properties:
+        dish:
+          $ref: '#/components/schemas/Dish'
+        specifications:
+          type: string
+        employee:
+          $ref: '#/components/schemas/Employee'
+      required:
+      - dish
+      - employee
+      - specifications
+    PaginatedDishList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Dish'
+    PaginatedMenuListList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/MenuList'
+    PaginatedOrderList:
+      type: object
+      properties:
+        count:
+          type: integer
+          example: 123
+        next:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=4
+        previous:
+          type: string
+          nullable: true
+          format: uri
+          example: http://api.example.org/accounts/?page=2
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Order'
+    PatchedDish:
+      type: object
+      properties:
+        name:
+          type: string
+          nullable: true
+          maxLength: 100
+        description:
+          type: string
+          nullable: true
+        id:
+          type: integer
+          readOnly: true
+    PatchedMenuCreateUpdate:
+      type: object
+      properties:
+        date:
+          type: string
+          format: date
+        options:
+          type: array
+          items:
+            $ref: '#/components/schemas/Dish'
+  securitySchemes:
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: Session
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Token-based authentication with required prefix "Token"

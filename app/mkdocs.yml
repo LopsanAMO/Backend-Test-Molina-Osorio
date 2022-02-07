@@ -1,0 +1,13 @@
+site_name: corner_test
+site_description: Cornershop Test
+repo_url: https://github.com/LopsanAMO/Cornersshop-Test
+site_dir: site
+copyright: Copyright &copy; 2020, <a href="https://github.com/LopsanAMO">LopsanAMO</a>.
+dev_addr: 0.0.0.0:8001
+
+nav:
+  - Home: 'index.md'
+  - API:
+    - Menu: 'api/menus.md'
+    - Ordenes: 'api/orders.md'
+

@@ -1,0 +1,76 @@
+version: '3'
+services:
+  app:
+    build:
+      context: .
+    restart: always
+    volumes:
+      - static-data:/vol/web
+    environment:
+      - DJANGO_SECRET_KEY=local
+      - DB_HOST=db
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - SECRET_KEY=${SECRET_KEY}
+      - ALLOWED_HOSTS=${ALLOWED_HOSTS}
+      - SLACK_API_KEY=${SLACK_API_KEY}
+    depends_on:
+      - db
+      - redis
+      - celery
+
+  redis:
+    image: redis:6-alpine
+    volumes:
+      - redis-data:/data
+
+  db:
+    image: postgres:13-alpine
+    restart: always
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASS}
+
+  celery:
+    restart: always
+    build:
+      context: .
+    user: root
+    command: >
+      celery -A corner_test.celery worker -B -l info --loglevel=DEBUG --without-gossip --without-mingle --without-heartbeat -Ofair --pool=solo
+    environment:
+      - DB_HOST=db
+      - DB_NAME=${DB_NAME}
+      - DB_USER=${DB_USER}
+      - DB_PASS=${DB_PASS}
+      - SECRET_KEY=${SECRET_KEY}
+      - SLACK_API_KEY=${SLACK_API_KEY}
+
+  proxy:
+    build:
+      context: ./proxy
+    restart: always
+    depends_on:
+      - app
+    ports:
+      - 80:8000
+    volumes:
+      - static-data:/vol/static
+
+  documentation:
+    restart: always
+    build: ./
+    command: "mkdocs serve"
+    volumes:
+      - ./:/code
+    ports:
+      - "8001:8001"
+
+volumes:
+  postgres-data:
+  static-data:
+  redis-data:
