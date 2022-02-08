@@ -53,7 +53,8 @@ class Common(Configuration):
     WSGI_APPLICATION = "corner_test.wsgi.application"
 
     # Email
-    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+    HOST = os.getenv('HOST', 'http://localhost:8000')
 
     ADMINS = (("Author", "lopsan.molina@gmail.com"),)
 
@@ -197,8 +198,6 @@ class Common(Configuration):
             "rest_framework.permissions.IsAuthenticated",
         ],
         "DEFAULT_AUTHENTICATION_CLASSES": (
-            "rest_framework.authentication.SessionAuthentication",
-            "rest_framework.authentication.TokenAuthentication",
             "rest_framework_simplejwt.authentication.JWTAuthentication",
         ),
         "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
@@ -222,4 +221,5 @@ class Common(Configuration):
         "ACCESS_TOKEN_LIFETIME": timedelta(days=30),
         "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
         "SIGNING_KEY": JWT_SECRET_KEY,
+        'AUTH_HEADER_TYPES': ('JWT',),
     }

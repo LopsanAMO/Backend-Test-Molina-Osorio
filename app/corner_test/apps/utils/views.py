@@ -6,9 +6,13 @@ from drf_spectacular.utils import extend_schema
 from rest_framework import generics
 
 
-@extend_schema(description="Mandar notificacion de menu a slack")
+@extend_schema(
+    description="Send menu reminder slack notification",
+    operation_id="Slack.message",
+    tags=["Slack"]
+)
 class DailyMenuReminderNotificationAPIView(generics.CreateAPIView):
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = (permissions.IsAuthenticated,)
     serializer_class = FakeSerializer
 
     def post(self, request):

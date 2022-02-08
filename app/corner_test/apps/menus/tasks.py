@@ -5,6 +5,7 @@ from django.conf import settings
 from corner_test.apps.menus.models import Menu
 from corner_test.apps.menus.serializers import MenuSerializer
 from corner_test.apps.utils.slack import SlackService
+from corner_test.apps.utils.mails import send_mail
 
 
 @app.task

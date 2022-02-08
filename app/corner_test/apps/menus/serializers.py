@@ -45,7 +45,7 @@ class SimpleDishSerializer(serializers.ModelSerializer):
 
 
 class MenuCreateUpdateSerializer(serializers.ModelSerializer):
-    options = DishSerializer(many=True, required=False)
+    options = SimpleDishSerializer(many=True, required=False)
 
     class Meta:
         model = Menu

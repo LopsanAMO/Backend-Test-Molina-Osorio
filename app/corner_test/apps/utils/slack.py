@@ -1,5 +1,6 @@
 import pytz
-from datetime import datetime, timezone
+from datetime import datetime
+from django.conf import settings
 from slack import WebClient
 from slack.errors import SlackApiError
 from corner_test.apps.employees.models import Employee
@@ -110,9 +111,7 @@ class SlackService:
                         {
                             "type": "button",
                             "text": {"type": "plain_text", "text": "Abrir Menu"},
-                            "url": "http://ec2-54-71-45-249.us-west-2.compute.amazonaws.com/api/v1/menu/{}/".format(
-                                menu_data["id"]
-                            ),
+                            "url": f'{settings.HOST}/api/v1/menu/{menu_data["id"]}/',
                         }
                     ],
                 }

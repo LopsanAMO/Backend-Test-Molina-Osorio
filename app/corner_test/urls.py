@@ -9,11 +9,10 @@ from drf_spectacular.views import (
     SpectacularSwaggerView,
 )
 from rest_framework.routers import DefaultRouter
-from rest_framework.authtoken import views
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-    TokenRefreshView,
-    TokenVerifyView,
+from corner_test.apps.access.views import (
+    LoginView,
+    RefreshTokenView,
+    VerifyTokenView,
 )
 from corner_test.apps.menus.views import (
     OrderListViewSet,
@@ -42,20 +41,13 @@ urlpatterns = [
     path("get_orders/", OrderSlackReadAPIView.as_view(), name="get_orders"),
     path("api/v1/", include(menu_router.urls)),
     path("api/v1/menus/", MenuListAPIView.as_view()),
-    path("api/v1/users/login/", TokenObtainPairView.as_view(), name="login"),
-    path("api/v1/users/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
-    path("api-token-auth/", views.obtain_auth_token),
-    path("api/token/verify/", TokenVerifyView.as_view(), name="token_verify"),
-    path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
+    path("api/v1/users/login/", LoginView.as_view(), name="login"),
+    path("api/v1/users/refresh/", RefreshTokenView.as_view(), name="token_refresh"),
+    path("api/token/verify/", VerifyTokenView.as_view(), name="token_verify"),
     path("api/schema/", SpectacularAPIView.as_view(), name="schema"),
     # Optional UI:
     path(
-        "api/schema/swagger-ui/",
-        SpectacularSwaggerView.as_view(url_name="schema"),
-        name="swagger-ui",
-    ),
-    path(
-        "api/schema/redoc/",
+        "api/doc/",
         SpectacularRedocView.as_view(url_name="schema"),
         name="redoc",
     ),

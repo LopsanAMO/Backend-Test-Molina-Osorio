@@ -4,16 +4,8 @@ services:
     image: postgres:11.6
   web:
     restart: always
-    environment:
-      - DJANGO_SECRET_KEY=local
-      - SLACK_API_KEY=xoxp-2307232680805-2303506300838-2315637221683-c1b45610af5b4b842fa3449f5919c835
-      - SLACK_USER_API_KEY=xoxp-2307232680805-2303506300838-2315637221683-c1b45610af5b4b842fa3449f5919c835
-      - DB_HOST=postgres
-      - DB_NAME=postgres
-      - DB_USER=postgres
-      - DB_PASS=postgres
-      - SECRET_KEY=SECRET_KEY
-      - ALLOWED_HOSTS=*
+    env_file:
+      - .env
     build:
       context: .
       dockerfile: DockerfileLocal
@@ -38,16 +30,8 @@ services:
     user: root
     command: >
       celery -A corner_test.celery worker -B -l info --loglevel=DEBUG --without-gossip --without-mingle --without-heartbeat -Ofair --pool=solo
-    environment:
-      - DJANGO_SECRET_KEY=local
-      - SLACK_API_KEY=xoxp-2307232680805-2303506300838-2315637221683-c1b45610af5b4b842fa3449f5919c835
-      - SLACK_USER_API_KEY=xoxp-2307232680805-2303506300838-2315637221683-c1b45610af5b4b842fa3449f5919c835
-      - DB_HOST=postgres
-      - DB_NAME=postgres
-      - DB_USER=postgres
-      - DB_PASS=postgres
-      - SECRET_KEY=SECRET_KEY
-      - ALLOWED_HOSTS=*
+    env_file:
+      - .env
     depends_on:
       - postgres
       - redis

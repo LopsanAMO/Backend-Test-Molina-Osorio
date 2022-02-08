@@ -1,6 +1,5 @@
-from drf_spectacular.types import OpenApiTypes
 from django.db import IntegrityError
-from drf_spectacular.utils import OpenApiExample, OpenApiParameter, extend_schema
+from drf_spectacular.utils import OpenApiExample, OpenApiParameter, extend_schema, OpenApiResponse
 from datetime import datetime
 from rest_framework import mixins, viewsets, status
 from rest_framework.views import APIView
@@ -21,10 +20,10 @@ class OrderListViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     serializer_class = OrderSerializer
     permission_classes = (IsAuthenticated,)
     queryset = Order.objects.filter(created_at=datetime.now().date())
-
     @extend_schema(
-        description="Lista de Ordenes.",
+        description="Get the orders from slack",
         operation_id="Orders.List",
+        tags=["Order"],
     )
     def list(self, request, *args, **kwargs):
         service = SlackService(settings.SLACK_API_KEY)
@@ -52,8 +51,9 @@ class MenuCreateUpdateDeleteViewSet(
     queryset = Menu.objects.all()
 
     @extend_schema(
-        description="Crear Menus",
+        description="Crete a menu",
         operation_id="Menu.Create",
+        tags=["Menu"],
     )
     def create(self, request, *args, **kwargs):
         return super(MenuCreateUpdateDeleteViewSet, self).create(
@@ -61,8 +61,18 @@ class MenuCreateUpdateDeleteViewSet(
         )
 
     @extend_schema(
-        description="Actializar Menus",
+        description="Get Menu information",
+        operation_id="Menu.Retrieve",
+    )
+    def create(self, request, *args, **kwargs):
+        return super(MenuCreateUpdateDeleteViewSet, self).retrieve(request,
+                                                                 *args,
+                                                                 **kwargs)
+
+    @extend_schema(
+        description="Update Menus",
         operation_id="Menu.Update",
+        tags=["Menu"],
     )
     def update(self, request, *args, **kwargs):
         return super(MenuCreateUpdateDeleteViewSet, self).update(
@@ -70,8 +80,9 @@ class MenuCreateUpdateDeleteViewSet(
         )
 
     @extend_schema(
-        description="Eliminar Menus",
+        description="Delete Menus",
         operation_id="Menu.Delete",
+        tags=["Menu"],
     )
     def destroy(self, request, *args, **kwargs):
         return super(MenuCreateUpdateDeleteViewSet, self).destroy(
@@ -83,8 +94,12 @@ class MenuListAPIView(APIView):
     permission_classes = (AllowAny,)
 
     @extend_schema(
-        description="Lista de Menus.",
+        description="List all todays menu",
         operation_id="Menus.List",
+        tags=["Menu"],
+        responses={
+            200: OpenApiResponse(response=MenuListSerializer),
+        },
     )
     def get(self, request, *args, **kwargs):
         try:
@@ -107,8 +122,9 @@ class DishListUpdateCreateDeleteViewSet(
     queryset = Dish.objects.all()
 
     @extend_schema(
-        description="Lista de Platillos.",
+        description="List all Dishes",
         operation_id="Dish.List",
+        tags=["Dish"],
     )
     def list(self, request, *args, **kwargs):
         return super(DishListUpdateCreateDeleteViewSet, self).list(
@@ -116,8 +132,9 @@ class DishListUpdateCreateDeleteViewSet(
         )
 
     @extend_schema(
-        description="Crear Platillos.",
+        description="Create a Dish for menu",
         operation_id="Dish.Create",
+        tags=["Dish"],
     )
     def create(self, request, *args, **kwargs):
         try:
@@ -140,8 +157,9 @@ class DishListUpdateCreateDeleteViewSet(
             )
 
     @extend_schema(
-        description="Actializar Platillos.",
+        description="Update a Dish",
         operation_id="Dish.Update",
+        tags=["Dish"],
     )
     def update(self, request, *args, **kwargs):
         return super(DishListUpdateCreateDeleteViewSet, self).update(
@@ -149,8 +167,9 @@ class DishListUpdateCreateDeleteViewSet(
         )
 
     @extend_schema(
-        description="Eliminar Platillos.",
+        description="Delete a Dish",
         operation_id="Dish.Delete",
+        tags=["Dish"],
     )
     def destroy(self, request, *args, **kwargs):
         return super(DishListUpdateCreateDeleteViewSet, self).destroy(
