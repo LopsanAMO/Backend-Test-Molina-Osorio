@@ -9,7 +9,7 @@ from rest_framework import generics
 @extend_schema(
     description="Send menu reminder slack notification",
     operation_id="Slack.message",
-    tags=["Slack"]
+    tags=["Slack"],
 )
 class DailyMenuReminderNotificationAPIView(generics.CreateAPIView):
     permission_classes = (permissions.IsAuthenticated,)

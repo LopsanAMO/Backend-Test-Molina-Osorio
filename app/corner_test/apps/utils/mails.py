@@ -4,7 +4,7 @@ from django.core.mail import EmailMessage
 
 def send_mail(data, to):
     message = EmailMessage(
-        subject='¡Recordatoria del Menu de hoy!',
+        subject="¡Recordatoria del Menu de hoy!",
         body=data,
         to=to,
         from_email=settings.EMAIL_HOST_USER,

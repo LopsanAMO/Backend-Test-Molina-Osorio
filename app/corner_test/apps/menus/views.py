@@ -1,5 +1,10 @@
 from django.db import IntegrityError
-from drf_spectacular.utils import OpenApiExample, OpenApiParameter, extend_schema, OpenApiResponse
+from drf_spectacular.utils import (
+    OpenApiExample,
+    OpenApiParameter,
+    extend_schema,
+    OpenApiResponse,
+)
 from datetime import datetime
 from rest_framework import mixins, viewsets, status
 from rest_framework.views import APIView
@@ -20,6 +25,7 @@ class OrderListViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     serializer_class = OrderSerializer
     permission_classes = (IsAuthenticated,)
     queryset = Order.objects.filter(created_at=datetime.now().date())
+
     @extend_schema(
         description="Get the orders from slack",
         operation_id="Orders.List",
@@ -65,9 +71,9 @@ class MenuCreateUpdateDeleteViewSet(
         operation_id="Menu.Retrieve",
     )
     def create(self, request, *args, **kwargs):
-        return super(MenuCreateUpdateDeleteViewSet, self).retrieve(request,
-                                                                 *args,
-                                                                 **kwargs)
+        return super(MenuCreateUpdateDeleteViewSet, self).retrieve(
+            request, *args, **kwargs
+        )
 
     @extend_schema(
         description="Update Menus",

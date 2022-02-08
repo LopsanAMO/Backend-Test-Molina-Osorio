@@ -53,8 +53,8 @@ class Common(Configuration):
     WSGI_APPLICATION = "corner_test.wsgi.application"
 
     # Email
-    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-    HOST = os.getenv('HOST', 'http://localhost:8000')
+    EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+    HOST = os.getenv("HOST", "http://localhost:8000")
 
     ADMINS = (("Author", "lopsan.molina@gmail.com"),)
 
@@ -221,5 +221,5 @@ class Common(Configuration):
         "ACCESS_TOKEN_LIFETIME": timedelta(days=30),
         "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
         "SIGNING_KEY": JWT_SECRET_KEY,
-        'AUTH_HEADER_TYPES': ('JWT',),
+        "AUTH_HEADER_TYPES": ("JWT",),
     }

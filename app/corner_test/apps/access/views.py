@@ -5,28 +5,21 @@ from rest_framework_simplejwt.views import (
     TokenVerifyView,
 )
 
-@extend_schema(
-    description="Login",
-    operation_id="Login",
-    tags=["Access"]
-)
+
+@extend_schema(description="Login", operation_id="Login", tags=["Access"])
 class LoginView(TokenObtainPairView):
     pass
 
 
 @extend_schema(
-    description="Refresh Token Access",
-    operation_id="Refresh_Token",
-    tags=["Access"]
+    description="Refresh Token Access", operation_id="Refresh_Token", tags=["Access"]
 )
 class RefreshTokenView(TokenRefreshView):
     pass
 
 
 @extend_schema(
-    description="Verify Token Access",
-    operation_id="Token_Verify",
-    tags=["Access"]
+    description="Verify Token Access", operation_id="Token_Verify", tags=["Access"]
 )
 class VerifyTokenView(TokenVerifyView):
     pass
