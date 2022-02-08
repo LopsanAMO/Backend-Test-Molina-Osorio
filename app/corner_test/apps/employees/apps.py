@@ -3,4 +3,4 @@ from django.apps import AppConfig
 
 
 class EmployeesConfig(AppConfig):
-    name = 'corner_test.apps.employees'
+    name = "corner_test.apps.employees"

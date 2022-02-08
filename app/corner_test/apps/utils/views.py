@@ -8,7 +8,7 @@ from rest_framework import generics
 
 @extend_schema(description="Mandar notificacion de menu a slack")
 class DailyMenuReminderNotificationAPIView(generics.CreateAPIView):
-    permission_classes = (permissions.AllowAny, )
+    permission_classes = (permissions.AllowAny,)
     serializer_class = FakeSerializer
 
     def post(self, request):
@@ -18,7 +18,7 @@ class DailyMenuReminderNotificationAPIView(generics.CreateAPIView):
 
 @extend_schema(description="Leer pedidos de slack")
 class OrderSlackReadAPIView(generics.CreateAPIView):
-    permission_classes = (permissions.AllowAny, )
+    permission_classes = (permissions.AllowAny,)
     serializer_class = FakeSerializer
 
     def post(self, request):

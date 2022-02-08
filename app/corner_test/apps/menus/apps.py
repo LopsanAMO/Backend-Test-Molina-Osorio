@@ -3,4 +3,4 @@ from django.apps import AppConfig
 
 
 class MenusConfig(AppConfig):
-    name = 'corner_test.apps.menus'
+    name = "corner_test.apps.menus"

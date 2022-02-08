@@ -11,35 +11,37 @@ class MenuSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Menu
-        fields = ('options', 'id')
+        fields = ("options", "id")
 
     def get_options(self, obj):
-        return ["Option {}: {}".format(option.id, option.name) for option in
-                obj.dish_set.all()]
+        return [
+            "Option {}: {}".format(option.id, option.name)
+            for option in obj.dish_set.all()
+        ]
 
 
 class DishSerializer(serializers.ModelSerializer):
     class Meta:
         model = Dish
-        fields = ('name', 'description', 'id', 'menu')
+        fields = ("name", "description", "id", "menu")
 
     def to_representation(self, instance):
         ret = super(DishSerializer, self).to_representation(instance)
         for key, value in ret.items():
-            if key == 'menu':
+            if key == "menu":
                 ret[key] = str(value)
         return ret
 
     def validate_menu(self, value):
-        if value in [None, '']:
-            raise serializers.ValidationError('menu dont be null or empty')
+        if value in [None, ""]:
+            raise serializers.ValidationError("menu dont be null or empty")
         return value
 
 
 class SimpleDishSerializer(serializers.ModelSerializer):
     class Meta:
         model = Dish
-        fields = ('name', 'description', 'id')
+        fields = ("name", "description", "id")
 
 
 class MenuCreateUpdateSerializer(serializers.ModelSerializer):
@@ -47,31 +49,31 @@ class MenuCreateUpdateSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Menu
-        fields = ('options',)
+        fields = ("options",)
 
     def create(self, validated_data):
         try:
             with transaction.atomic():
-                options = validated_data.pop('options', None)
+                options = validated_data.pop("options", None)
                 try:
                     menu = Menu.objects.create(**validated_data)
                 except IntegrityError as e:
                     raise MenuDateException(
-                        "menu's today already exists, please edit or delete it")
+                        "menu's today already exists, please edit or delete it"
+                    )
                 for i in options:
                     Dish.objects.create(menu=menu, **i)
                 return menu
         except MenuDateException as e:
-            raise serializers.ValidationError(detail={'error': str(e)})
+            raise serializers.ValidationError(detail={"error": str(e)})
         except Exception as e:
-            raise serializers.ValidationError(detail={'error': str(e)})
+            raise serializers.ValidationError(detail={"error": str(e)})
 
 
 class MenuListSerializer(serializers.ModelSerializer):
-
     class Meta:
         model = Menu
-        fields = ('date', 'dish_set', 'id')
+        fields = ("date", "dish_set", "id")
         depth = 1
 
 
@@ -81,7 +83,7 @@ class OrderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Order
-        fields = ('dish', 'specifications', 'employee')
+        fields = ("dish", "specifications", "employee")
 
 
 class FakeSerializer(serializers.Serializer):

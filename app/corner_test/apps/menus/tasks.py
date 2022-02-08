@@ -24,6 +24,3 @@ def send_today_menu():
 def save_messages():
     service = SlackService(settings.SLACK_API_KEY)
     service.get_messages()
-
-
-

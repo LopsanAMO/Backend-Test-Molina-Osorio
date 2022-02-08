@@ -7,15 +7,19 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from corner_test.apps.menus.models import Order, Menu, Dish
-from corner_test.apps.menus.serializers import OrderSerializer,\
-    MenuCreateUpdateSerializer, DishSerializer, MenuListSerializer
+from corner_test.apps.menus.serializers import (
+    OrderSerializer,
+    MenuCreateUpdateSerializer,
+    DishSerializer,
+    MenuListSerializer,
+)
 from corner_test.apps.utils.slack import SlackService
 from django.conf import settings
 
 
 class OrderListViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
     serializer_class = OrderSerializer
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticated,)
     queryset = Order.objects.filter(created_at=datetime.now().date())
 
     @extend_schema(
@@ -36,13 +40,15 @@ class OrderListViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
         return Response(serializer.data)
 
 
-class MenuCreateUpdateDeleteViewSet(mixins.CreateModelMixin,
-                                    mixins.UpdateModelMixin,
-                                    mixins.DestroyModelMixin,
-                                    mixins.RetrieveModelMixin,
-                                    viewsets.GenericViewSet):
+class MenuCreateUpdateDeleteViewSet(
+    mixins.CreateModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
+    mixins.RetrieveModelMixin,
+    viewsets.GenericViewSet,
+):
     serializer_class = MenuCreateUpdateSerializer
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticated,)
     queryset = Menu.objects.all()
 
     @extend_schema(
@@ -50,31 +56,31 @@ class MenuCreateUpdateDeleteViewSet(mixins.CreateModelMixin,
         operation_id="Menu.Create",
     )
     def create(self, request, *args, **kwargs):
-        return super(MenuCreateUpdateDeleteViewSet, self).create(request,
-                                                                 *args,
-                                                                 **kwargs)
+        return super(MenuCreateUpdateDeleteViewSet, self).create(
+            request, *args, **kwargs
+        )
 
     @extend_schema(
         description="Actializar Menus",
         operation_id="Menu.Update",
     )
     def update(self, request, *args, **kwargs):
-        return super(MenuCreateUpdateDeleteViewSet, self).update(request,
-                                                                 *args,
-                                                                 **kwargs)
+        return super(MenuCreateUpdateDeleteViewSet, self).update(
+            request, *args, **kwargs
+        )
 
     @extend_schema(
         description="Eliminar Menus",
         operation_id="Menu.Delete",
     )
     def destroy(self, request, *args, **kwargs):
-        return super(MenuCreateUpdateDeleteViewSet, self).destroy(request,
-                                                                  *args,
-                                                                  **kwargs)
+        return super(MenuCreateUpdateDeleteViewSet, self).destroy(
+            request, *args, **kwargs
+        )
 
 
 class MenuListAPIView(APIView):
-    permission_classes = (AllowAny, )
+    permission_classes = (AllowAny,)
 
     @extend_schema(
         description="Lista de Menus.",
@@ -86,17 +92,18 @@ class MenuListAPIView(APIView):
             serializer = MenuListSerializer(queryset)
             return Response(data=serializer.data)
         except Menu.DoesNotExist:
-            return Response(data={'message': "no menu found for today"},
-                            status=200)
+            return Response(data={"message": "no menu found for today"}, status=200)
 
 
-class DishListUpdateCreateDeleteViewSet(mixins.ListModelMixin,
-                                        mixins.UpdateModelMixin,
-                                        mixins.CreateModelMixin,
-                                        mixins.DestroyModelMixin,
-                                        viewsets.GenericViewSet):
+class DishListUpdateCreateDeleteViewSet(
+    mixins.ListModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.CreateModelMixin,
+    mixins.DestroyModelMixin,
+    viewsets.GenericViewSet,
+):
     serializer_class = DishSerializer
-    permission_classes = (IsAuthenticated, )
+    permission_classes = (IsAuthenticated,)
     queryset = Dish.objects.all()
 
     @extend_schema(
@@ -104,9 +111,9 @@ class DishListUpdateCreateDeleteViewSet(mixins.ListModelMixin,
         operation_id="Dish.List",
     )
     def list(self, request, *args, **kwargs):
-        return super(DishListUpdateCreateDeleteViewSet, self).list(request,
-                                                                   *args,
-                                                                   **kwargs)
+        return super(DishListUpdateCreateDeleteViewSet, self).list(
+            request, *args, **kwargs
+        )
 
     @extend_schema(
         description="Crear Platillos.",
@@ -118,29 +125,34 @@ class DishListUpdateCreateDeleteViewSet(mixins.ListModelMixin,
             serializer.is_valid(raise_exception=True)
             self.perform_create(serializer)
             headers = self.get_success_headers(serializer.data)
-            return Response(serializer.data, status=status.HTTP_201_CREATED,
-                            headers=headers)
+            return Response(
+                serializer.data, status=status.HTTP_201_CREATED, headers=headers
+            )
         except IntegrityError as e:
-            return Response(data={'error': 'integrity_error', 'message': str(e)},
-                            status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                data={"error": "integrity_error", "message": str(e)},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
         except Exception as e:
-            return Response(data={'error': 'error', 'message': str(e)},
-                            status=status.HTTP_400_BAD_REQUEST)
+            return Response(
+                data={"error": "error", "message": str(e)},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
 
     @extend_schema(
         description="Actializar Platillos.",
         operation_id="Dish.Update",
     )
     def update(self, request, *args, **kwargs):
-        return super(DishListUpdateCreateDeleteViewSet, self).update(request,
-                                                                 *args,
-                                                                 **kwargs)
+        return super(DishListUpdateCreateDeleteViewSet, self).update(
+            request, *args, **kwargs
+        )
 
     @extend_schema(
         description="Eliminar Platillos.",
         operation_id="Dish.Delete",
     )
     def destroy(self, request, *args, **kwargs):
-        return super(DishListUpdateCreateDeleteViewSet, self).destroy(request,
-                                                                  *args,
-                                                                  **kwargs)
+        return super(DishListUpdateCreateDeleteViewSet, self).destroy(
+            request, *args, **kwargs
+        )

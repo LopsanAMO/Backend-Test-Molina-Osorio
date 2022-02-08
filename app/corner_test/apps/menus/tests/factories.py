@@ -7,15 +7,15 @@ class MenuFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Menu
 
-    date = factory.Faker('date')
+    date = factory.Faker("date")
 
 
 class DishFactory(factory.django.DjangoModelFactory):
     class Meta:
         model = Dish
 
-    name = factory.Sequence(lambda n: f'name_{n}')
-    description = factory.Sequence(lambda n: f'description_{n}')
+    name = factory.Sequence(lambda n: f"name_{n}")
+    description = factory.Sequence(lambda n: f"description_{n}")
     menu = factory.SubFactory(MenuFactory)
 
 
@@ -24,9 +24,9 @@ class OrderFactory(factory.django.DjangoModelFactory):
         model = Order
 
     dish = factory.SubFactory(DishFactory)
-    specifications = factory.Sequence(lambda n: f'specifications_{n}')
+    specifications = factory.Sequence(lambda n: f"specifications_{n}")
     employee = factory.SubFactory(EmployeeFactory)
-    created_at = factory.Faker('date')
+    created_at = factory.Faker("date")
 
 
 class UserFactory(factory.django.DjangoModelFactory):

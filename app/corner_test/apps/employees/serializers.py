@@ -5,4 +5,4 @@ from corner_test.apps.employees.models import Employee
 class EmployeeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Employee
-        fields = ('name', )
+        fields = ("name",)
