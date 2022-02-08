@@ -92,8 +92,8 @@ docker-compose run --rm web ./app/manage.py createsuperuser
 - Menus Notifications are sent at 8 AM CLT, but theres a service you can call to invoke menu's notification ```/send_menu_reminder/```
 - Orders are automatically picked up from Slack at 11 a.m. CLT as well as stopped being taken at the same time, but as the reminder notification every time you call ```/api/v1/orders/``` service, the orders will be taken too, except for the ones that were not in time (11 A.M CLT)
 - In order to chose an menu option on slack, you just need to write  option and the number of the option e.g ```option 1```
-- if you want to send some specifications in your order just write it bellow your option menus choose
-![option chose example](https://github.com/slackapi/python-slack-sdk/blob/main/tutorial/assets/bot-token.png?raw=true)
+- if you want to send some specifications in your order just write it bellow your chosen option  
+![option chose example](https://github.com/LopsanAMO/Backend-Test-Molina-Osorio/blob/master/option.png?raw=true)
 
 # Documentation (running locally) 
 
