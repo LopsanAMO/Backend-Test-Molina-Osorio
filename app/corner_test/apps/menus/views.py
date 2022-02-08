@@ -70,7 +70,7 @@ class MenuCreateUpdateDeleteViewSet(
         description="Get Menu information",
         operation_id="Menu.Retrieve",
     )
-    def create(self, request, *args, **kwargs):
+    def retrieve(self, request, *args, **kwargs):
         return super(MenuCreateUpdateDeleteViewSet, self).retrieve(
             request, *args, **kwargs
         )
