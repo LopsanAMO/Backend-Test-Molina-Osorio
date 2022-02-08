@@ -28,38 +28,6 @@ from corner_test.apps.utils.tests.test_services import (
 from corner_test.apps.utils.exceptions import SlackErrorException
 
 
-class TestLoginView(TestCase):
-    def setUp(self):
-        self.client = APIClient()
-        self.user = User.objects.create_user(
-            username="foo2", email="user@foo.com", password="pass"
-        )
-        self.url_login = reverse("login")
-        self.login_data = {"username": "foo2", "password": "pass"}
-
-    def test_login_credentials_ok(self):
-        response = self.client.post(self.url_login, self.login_data, format="json")
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertTrue("access" in response.data)
-        token = response.data["access"]
-        verification_url = reverse("token_verify")
-        resp = self.client.post(verification_url, {"token": token}, format="json")
-        self.assertEqual(resp.status_code, status.HTTP_200_OK)
-
-    def test_login_credentails_fail(self):
-        payload = {"username": "foo2", "password": "p"}
-        response = self.client.post(self.url_login, payload, format="json")
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
-    def test_user_not_active_account_credentials(self):
-        user = User.objects.create_user(
-            username="foo4", email="user@foo.com", password="pass", is_active=False
-        )
-        payload = {"username": "foo4", "password": "pass"}
-        response = self.client.post(self.url_login, payload, format="json")
-        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-
-
 class TestOrderListViewSet(TestCase):
     def setUp(self):
         self.url = "/api/v1/orders/"
@@ -74,7 +42,7 @@ class TestOrderListViewSet(TestCase):
         self.login_data = {"username": "foo2", "password": "pass"}
         login_resp = self.client.post(self.url_login, self.login_data, format="json")
         token = login_resp.data["access"]
-        self.client.credentials(HTTP_AUTHORIZATION="Bearer " + token)
+        self.client.credentials(HTTP_AUTHORIZATION="JWT " + token)
 
     @mock.patch("slack.WebClient.conversations_list", side_effect=mocked_slack_channel)
     @mock.patch(
@@ -131,7 +99,7 @@ class TestMenuCreateUpdateDeleteViewSet(TestCase):
         self.login_data = {"username": "foo2", "password": "pass"}
         login_resp = self.client.post(self.url_login, self.login_data, format="json")
         self.token = login_resp.data["access"]
-        self.client.credentials(HTTP_AUTHORIZATION="Bearer " + self.token)
+        self.client.credentials(HTTP_AUTHORIZATION="JWT " + self.token)
 
     def test_request_create_menu(self):
         dish = DishFactory()
@@ -160,11 +128,11 @@ class TestMenuCreateUpdateDeleteViewSet(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_create_menu_without_credentials(self):
-        self.client.credentials(HTTP_AUTHORIZATION="Bearer " + "a")
+        self.client.credentials(HTTP_AUTHORIZATION="JWT " + "a")
         dish = DishFactory()
         payload = {"options": [SimpleDishSerializer(dish).data]}
         response = self.client.post(self.url, data=payload, format="json")
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_request_delete_menu(self):
         menu = MenuFactory()
@@ -178,10 +146,10 @@ class TestMenuCreateUpdateDeleteViewSet(TestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_request_delete_menu_wuthout_credentials(self):
-        self.client.credentials(HTTP_AUTHORIZATION="Bearer " + "a")
+        self.client.credentials(HTTP_AUTHORIZATION="JWT " + "a")
         menu = MenuFactory()
         response = self.client.delete(reverse("menu-detail", kwargs={"pk": menu.id}))
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_request_update_menu(self):
         menu = MenuFactory(date=datetime.now())
@@ -202,14 +170,14 @@ class TestMenuCreateUpdateDeleteViewSet(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_request_update_menu_no_credentials(self):
-        self.client.credentials(HTTP_AUTHORIZATION="Bearer " + "a")
+        self.client.credentials(HTTP_AUTHORIZATION="JWT " + "a")
         menu = MenuFactory(date=datetime.now())
         now = datetime.now().date()
         payload = {}
         response = self.client.put(
             reverse("menu-detail", kwargs={"pk": menu.id}), data=payload
         )
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
 
 class TestDishListUpdateCreateDeleteViewSet(TestCase):
@@ -225,7 +193,7 @@ class TestDishListUpdateCreateDeleteViewSet(TestCase):
         self.login_data = {"username": "foo2", "password": "pass"}
         login_resp = self.client.post(self.url_login, self.login_data, format="json")
         token = login_resp.data["access"]
-        self.client.credentials(HTTP_AUTHORIZATION="Bearer " + token)
+        self.client.credentials(HTTP_AUTHORIZATION="JWT " + token)
 
     def test_request_create_dish(self):
         payload = DishSerializer(self.dish).data
@@ -240,10 +208,10 @@ class TestDishListUpdateCreateDeleteViewSet(TestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_request_create_dish_no_credentials(self):
-        self.client.credentials(HTTP_AUTHORIZATION="Bearer " + "a")
+        self.client.credentials(HTTP_AUTHORIZATION="JWT " + "a")
         payload = DishSerializer(self.dish).data
         response = self.client.post(self.url, data=payload, format="json")
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_request_delete_dish(self):
         dish = DishFactory()
@@ -257,10 +225,10 @@ class TestDishListUpdateCreateDeleteViewSet(TestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_request_delete_dish_no_credentials(self):
-        self.client.credentials(HTTP_AUTHORIZATION="Bearer " + "a")
+        self.client.credentials(HTTP_AUTHORIZATION="JWT " + "a")
         dish = DishFactory()
         response = self.client.delete(reverse("dish-detail", kwargs={"pk": dish.id}))
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
     def test_request_update_dish(self):
         payload = {"name": "new_name", "partial": True}
@@ -277,9 +245,9 @@ class TestDishListUpdateCreateDeleteViewSet(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_request_update_dish_no_credentials(self):
-        self.client.credentials(HTTP_AUTHORIZATION="Bearer " + "a")
+        self.client.credentials(HTTP_AUTHORIZATION="JWT " + "a")
         payload = {"name": "new_name", "partial": True}
         response = self.client.put(
             reverse("dish-detail", kwargs={"pk": self.dish.id}), data=payload
         )
-        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
