@@ -2,8 +2,7 @@
 
 Cornershop Test. Check out the project's [documentation](http://ec2-54-71-45-249.us-west-2.compute.amazonaws.com:8001/).
 
-[![Run in Postman](https://run.pstmn.io/button.svg)](https://app.getpostman.com/run-collection/b9555e7e412740e39c1a?action=collection%2Fimport)
-
+Postman Collection - https://www.getpostman.com/collections/b9555e7e412740e39c1a
 # Prerequisites
 
 - [Docker](https://docs.docker.com/docker-for-mac/install/)
