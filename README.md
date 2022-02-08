@@ -54,7 +54,7 @@ Next you'll need to authorize the app for the Bot User permissions.
 Then you can send the url to people you want to send menus notification or you can can join a previously created workspace made for this test and the slack token preveiusly created:
 
 - [join to slack workspace](https://join.slack.com/t/corner-testespacio/shared_invite/zt-tfxesdh1-RvHNTAVEEjsUDmXNxD4PpA) ```https://join.slack.com/t/corner-testespacio/shared_invite/zt-tfxesdh1-RvHNTAVEEjsUDmXNxD4PpA```
-- ``SLACK_API_KEY=xoxp-2307232680805-2303506300838-2315637221683-c1b45610af5b4b842fa3449f5919c835```
+- ```SLACK_API_KEY=xoxp-2307232680805-2303506300838-2315637221683-c1b45610af5b4b842fa3449f5919c835```
 
 # Initialize the project
 
